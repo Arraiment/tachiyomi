@@ -51,4 +51,11 @@
         app:iconTint="?attr/colorOnToolbar"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_open_in_web_view"
+        android:icon="@drawable/ic_public_24dp"
+        android:title="@string/action_open_in_web_view"
+        app:iconTint="?attr/colorOnToolbar"
+        app:showAsAction="always" />
+
 </menu>

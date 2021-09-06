@@ -254,7 +254,7 @@ abstract class HttpSource : CatalogueSource {
      *
      * @param chapter the chapter whose page list has to be fetched.
      */
-    protected open fun pageListRequest(chapter: SChapter): Request {
+    open fun pageListRequest(chapter: SChapter): Request {
         return GET(baseUrl + chapter.url, headers)
     }
 

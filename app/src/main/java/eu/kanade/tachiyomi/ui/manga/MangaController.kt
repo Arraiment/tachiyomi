@@ -1020,6 +1020,7 @@ class MangaController :
             binding.actionToolbar.findItem(R.id.action_remove_bookmark)?.isVisible = chapters.all { it.chapter.bookmark }
             binding.actionToolbar.findItem(R.id.action_mark_as_read)?.isVisible = chapters.any { !it.chapter.read }
             binding.actionToolbar.findItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
+            binding.actionToolbar.findItem(R.id.action_open_in_web_view)?.isVisible = chapters.size == 1
 
             // Hide FAB to avoid interfering with the bottom action toolbar
             actionFab?.isVisible = false
@@ -1042,6 +1043,7 @@ class MangaController :
             R.id.action_mark_as_read -> markAsRead(getSelectedChapters())
             R.id.action_mark_as_unread -> markAsUnread(getSelectedChapters())
             R.id.action_mark_previous_as_read -> markPreviousAsRead(getSelectedChapters())
+            R.id.action_open_in_web_view -> openChapterInWebView(getSelectedChapters())
             else -> return false
         }
         return true
@@ -1177,6 +1179,21 @@ class MangaController :
     override fun startDownloadNow(position: Int) {
         val chapter = chaptersAdapter?.getItem(position) ?: return
         presenter.startDownloadingNow(chapter)
+    }
+
+    private fun openChapterInWebView(chapters: List<ChapterItem>) {
+        val source = presenter.source as? HttpSource ?: return
+        val chapter = chapters[0].chapter
+
+        val url = try {
+            source.pageListRequest(chapter).url.toString()
+        } catch (e: Exception) {
+            return
+        }
+
+        val activity = activity ?: return
+        val intent = WebViewActivity.newIntent(activity, url, source.id, chapter.name)
+        startActivity(intent)
     }
 
     // OVERFLOW MENU DIALOGS
